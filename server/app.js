@@ -35,3 +35,25 @@ server.use(bodyParser.urlencoded({
 server.listen(3000,()=>{
   console.log('server is running...');
 });
+
+
+server.post('/orderList',(req,res)=>{
+  let role=parseInt(req.body.role);
+  let uid=req.body.uid;
+  let page=req.body.page;
+  let pageSize=10;
+  let offset=(page-1)*pageSize;
+  if(role == 0){
+    let sql='SELECT r_title, old_town, r_room, r_bed, r_people, order_time,all_price FROM gz_order go LEFT JOIN gz_home_resources ghr ON o_rid=rid LEFT JOIN gz_old_town got ON got.`tid`=ghr.`r_tid` WHERE go.`r_uid`=? LIMIT '+ offset + ',' + pageSize;
+    pool.query(sql,[uid],(error,results)=>{
+      if(error) throw error;
+      res.send({message:'查询成功',code:1,results});
+    });
+  }else{
+    let sql='SELECT r_title, old_town, r_room, r_bed, r_people, order_time,all_price FROM gz_order go LEFT JOIN gz_home_resources ghr ON o_rid=rid LEFT JOIN gz_old_town got ON got.`tid`=ghr.`r_tid` WHERE ghr.`r_uid`=? LIMIT '+ offset + ',' + pageSize;
+    pool.query(sql,[uid],(error,results)=>{
+      if(error) throw error;
+      res.send({message:'查询成功',code:1,results});
+    });
+  }
+});
