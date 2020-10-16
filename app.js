@@ -61,7 +61,7 @@ server.post('/orderList',(req,res)=>{
 //订单详情接口by张玥
 server.post('/orderDetails',(req,res)=>{
   let oid=parseInt(req.body.oid);
-  let sql='SELECT r_title, old_town, enter_time, leave_time, r_room, r_people,all_price,r_margin FROM gz_order go LEFT JOIN gz_home_resources ghr ON o_rid=rid LEFT JOIN gz_old_town got ON got.`tid`=ghr.`r_tid` WHERE go.`oid`=?';
+  let sql='SELECT r_title, old_town, enter_time, leave_time, r_room, r_people, o_enter_person_name, o_enter_person_phone, o_enter_person_idcard, all_price, r_margin FROM gz_order go LEFT JOIN gz_home_resources ghr ON o_rid=rid LEFT JOIN gz_old_town got ON got.`tid`=ghr.`r_tid` WHERE go.`oid`=?';
   pool.query(sql,[oid],(error,results)=>{
     if(error) throw error;
     res.send({message:'查询成功',code:1,results});
