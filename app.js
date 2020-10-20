@@ -67,3 +67,80 @@ server.post('/orderDetails',(req,res)=>{
     res.send({message:'查询成功',code:1,results});
   });
 });
+
+
+//获取所有 古镇分类接口 by王建鑫 (调试完成)
+server.get('/town',(req,res)=>{
+  //查找古镇表中所有数据 
+  let sql = 'SELECT tid,old_town,t_cid FROM gz_old_town';
+  //通过MySQL连接池执行SQL语句
+  pool.query(sql,(err,results)=>{
+    if(err) throw err;
+    res.send({message:'查询成功',code:1,results:results});
+  });
+});
+//获取所有 城市分类接口 by王建鑫 (调试完成)
+server.get('/city',(req,res)=>{
+  //查找城市表中的所有数据
+  let sql = 'SELECT cid,city FROM gz_city';
+  //通过MySQL连接池执行SQL语句
+  pool.query(sql,(err,results)=>{
+    if(err) throw err;
+    res.send({message:'查询成功',code:1,results:results});
+  });
+});
+
+
+
+//搜索列表接口 by王建鑫  (调试完成)
+//获取特定城市下的房源信息的接口
+server.get('/search',(req,res)=>{
+  //从URL参数中获取cid  -- 房源信息ID
+  let cid = req.query.cid;
+  //从URL参数中获取page -- 页码
+  let page = req.query.page;
+  //存储每页显示的记录数
+  let pagesize = 1;
+  //根据MySQL分页的标准计算公式计算出offset参数值,并且带入到SQL语句中
+  let offset = (page - 1) * pagesize;
+  //现以接收到cid为条件进行房源信息的查找,此时的pagesize才是真正的返回多少条记录呢
+  let sql = 'SELECT rid,r_cid,r_title,r_address,r_describe,r_photo,r_price,r_margin,r_room,r_hall,r_toilet,r_bed,r_people,r_fac,r_know FROM gz_home_resources WHERE r_cid = ? LIMIT ' + offset + ',' + pagesize;
+  //总记录数
+  let rowcount;
+  //总页数
+  let pagecount;
+  //SQL
+  pool.query(sql,[cid],(err,result)=>{
+    if(err) throw err;
+    /////////////////   
+    //记录数
+    sql = 'SELECT COUNT(rid) AS count FROM gz_home_resources WHERE r_cid=?';
+    pool.query(sql,[cid],(err,results)=>{
+      if(err) throw err;    
+      rowcount = results[0].count;
+      //计算总页数
+      pagecount = Math.ceil(rowcount / pagesize);
+      //返回数据及总页数信息
+      res.send({message:'查询成功',code:1,results:result,pagecount:pagecount});   
+    });
+    /////////////////
+  })
+});
+
+
+
+//详情界面接口by王建鑫 (调试完成)
+server.get('/details',(req,res)=>{
+  //获取房子的id
+  let id = req.query.id;
+  console.log(id)
+  //SQL查询 -- 
+  //
+  let sql = 'SELECT rid,r_title,r_address,r_describe,r_photo,r_price,r_margin,r_room,r_hall,r_toilet,r_bed,r_people,r_fac,r_know FROM gz_home_resources WHERE rid=?';
+  //执行SQL语句
+  pool.query(sql,[id],(error,results)=>{
+    if(error) throw error;
+    res.send({message:'查询成功',code:1,result:results[0]});
+    
+  });
+});
