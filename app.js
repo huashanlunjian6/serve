@@ -38,20 +38,21 @@ server.listen(3000,()=>{
 
 //订单列表接口by张玥
 server.post('/orderList',(req,res)=>{
+  let title='%'+ req.body.title +'%';
   let role=parseInt(req.body.role);
   let uid=parseInt(req.body.uid);
   let page=parseInt(req.body.page);
   let pageSize=5;
   let offset=(page-1)*pageSize;
   if(role == 0){
-    let sql='SELECT oid,r_title, old_town, r_room, r_bed, r_people, order_time,all_price FROM gz_order go LEFT JOIN gz_home_resources ghr ON o_rid=rid LEFT JOIN gz_old_town got ON got.`tid`=ghr.`r_tid` WHERE go.`r_uid`=? LIMIT '+ offset + ',' + pageSize;
-    pool.query(sql,[uid],(error,results)=>{
+    let sql="SELECT oid,r_title, old_town, r_photo, r_room, r_bed, r_people, order_time,all_price FROM gz_order go LEFT JOIN gz_home_resources ghr ON o_rid=rid LEFT JOIN gz_old_town got ON got.`tid`=ghr.`r_tid` WHERE go.`r_uid`=? AND  ghr.`r_title` LIKE ? LIMIT "+ offset + ',' + pageSize;
+    pool.query(sql,[uid,title],(error,results)=>{
       if(error) throw error;
       ////////////////////////
-      let sql='SELECT COUNT(oid) AS count FROM gz_order WHERE r_uid = ?';
+      let sql="SELECT COUNT(oid) AS count FROM gz_order go LEFT JOIN gz_home_resources ghr ON o_rid=rid LEFT JOIN gz_old_town got ON got.`tid`=ghr.`r_tid` WHERE go.`r_uid`=? AND ghr.`r_title` LIKE ? ";
       let rowcount;
       let pagecount;
-      pool.query(sql,[uid],(err,result)=>{
+      pool.query(sql,[uid,title],(err,result)=>{
         if(err) throw err;
         rowcount=result[0].count;
         pagecount=Math.ceil(rowcount/pageSize);
@@ -59,14 +60,14 @@ server.post('/orderList',(req,res)=>{
       })
     });
   }else{
-    let sql='SELECT oid,r_title, old_town, r_room, r_bed, r_people, r_price, order_time,all_price FROM gz_order go LEFT JOIN gz_home_resources ghr ON o_rid=rid LEFT JOIN gz_old_town got ON got.`tid`=ghr.`r_tid` WHERE ghr.`r_uid`=? LIMIT '+ offset + ',' + pageSize;
-    pool.query(sql,[uid],(error,results)=>{
+    let sql="SELECT oid,r_title, old_town, r_photo, r_room, r_bed, r_people, r_price, order_time,all_price FROM gz_order go LEFT JOIN gz_home_resources ghr ON o_rid=rid LEFT JOIN gz_old_town got ON got.`tid`=ghr.`r_tid` WHERE ghr.`r_uid`=?  AND  ghr.`r_title` LIKE ? LIMIT "+ offset + ',' + pageSize;
+    pool.query(sql,[uid,title],(error,results)=>{
       if(error) throw error;
       ////////////////////////
-      let sql='SELECT COUNT(oid) AS count FROM gz_order go LEFT JOIN gz_home_resources ghr ON o_rid=rid LEFT JOIN gz_old_town got ON got.`tid`=ghr.`r_tid` WHERE ghr.`r_uid`=?';
+      let sql="SELECT COUNT(oid) AS count FROM gz_order go LEFT JOIN gz_home_resources ghr ON o_rid=rid LEFT JOIN gz_old_town got ON got.`tid`=ghr.`r_tid` WHERE ghr.`r_uid`=? AND  ghr.`r_title` LIKE ? ";
       let rowcount;
       let pagecount;
-      pool.query(sql,[uid],(err,result)=>{
+      pool.query(sql,[uid,title],(err,result)=>{
         if(err) throw err;
         rowcount=result[0].count;
         pagecount=Math.ceil(rowcount/pageSize);
