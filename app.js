@@ -162,3 +162,26 @@ server.get('/details',(req,res)=>{
     
   });
 });
+
+// 数据测试成功
+// 向数据库放入订单信息
+server.post("/saveorder",(req,res)=>{
+  //获取地址栏中传开的数据
+  let data = req.body;
+  // // 要插入的数据，按顺序来
+  let dataInsert = Object.values( data ).join("','")
+  // console.log(req.body.r_uid )
+  // 向数据库中插入数据
+  let sql = "INSERT INTO gz_order(r_uid,o_rid,status,order_time,enter_time,leave_time,all_price,o_enter_person_name,o_enter_person_phone,o_enter_person_idcard) VALUES(' "+dataInsert+" ')" ;
+  pool.query(sql,(err,result)=>{
+    if( err ) throw err;
+    // console.log( result )
+    if(result.affectedRows){
+      res.send( {message:"添加成功",code:1} )
+    }else{
+      res.send( {message:'添加失败',code:0} )
+    }
+  } )
+  // console.log(Object.values(data).join())
+
+}) 
