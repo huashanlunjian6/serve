@@ -165,7 +165,6 @@ server.get('/details', (req, res) => {
 
 // 数据测试成功
 // 向数据库放入订单信息
-<<<<<<< HEAD
 server.post("/saveorder", (req, res) => {
         //获取地址栏中传开的数据
         let data = req.body;
@@ -224,27 +223,31 @@ server.post('/register', (req, res) => {
 });
 
 
+
+
+
 // 用户登陆的接口by 王睿芳
 server.post('/login', (req, res) => {
-        let uname = req.body.uname;
-        let upwd = md5(req.body.upwd);
-        // 现在要以输入的用户名和密码为条件进行查找
-        let sql = 'select uid,uname,user_name,avatar,isrole from gz_user where uname=? and upwd=?';
-        pool.query(sql, [uname, upwd], (err, results) => {
-            if (err) throw err;
-            //登陆成功
-            if (results.length == 1) {
-                res.send({ message: '登陆成功', code: 1, info: results[0] });
+  let uname = req.body.uname;
+  let upwd = md5(req.body.upwd);
+  // 现在要以输入的用户名和密码为条件进行查找
+  let sql = 'select uid,uname,user_name,avatar,isrole from gz_user where uname=? and upwd=?';
+  pool.query(sql, [uname, upwd], (err, results) => {
+      if (err) throw err;
+      //登陆成功
+      if (results.length == 1) {
+          res.send({ message: '登陆成功', code: 1, info: results[0] });
 
-            } else {
-                //登陆失败
-                res.send({ message: '登陆失败', code: 0 });
-            }
-        })
-    })
+      } else {
+          //登陆失败
+          res.send({ message: '登陆失败', code: 0 });
+      }
+  })
+})
+
+
     // 如果找到，则代表用户登陆成功，用户名密码都正确
     // 否则代表用户登陆失败
-=======
 server.post("/saveorder",(req,res)=>{
   //获取地址栏中传开的数据
   let data = req.body;
@@ -267,8 +270,9 @@ server.post("/saveorder",(req,res)=>{
   // 又一次提交
 }) 
 
-<<<<<<< HEAD
-}) 
+
+
+
 //首页
 server.get('/index',(req,res)=>{
   let sql="select rid,r_title,r_price ,r_photo,r_people from gz_home_resources"
@@ -276,7 +280,8 @@ server.get('/index',(req,res)=>{
     if(error)throw error;
     res.send({message:"首页加载成功",results:results.slice(0,4)})
   })
-=======
+}) 
+
 //利用房源id获取信息
 server.get("/getGzhome",(req,res)=>{
   // 获取房源id
@@ -300,6 +305,4 @@ server.get("/getGzhome",(req,res)=>{
   // 又一次提交
   // 又一次提交
   // pool.query(sql)
->>>>>>> 362e24f3a927ef1cd83f0ade476c81be15692000
 })
->>>>>>> 8ef7ea790308bcf70a73c2b58bb18a218885dc30
