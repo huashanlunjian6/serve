@@ -208,6 +208,6 @@ server.get("/getGzhome",(req,res)=>{
     })
     // console.log(results)
   } )
-  
+  // 又一次提交
   // pool.query(sql)
 })
