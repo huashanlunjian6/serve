@@ -110,7 +110,6 @@ server.get('/city',(req,res)=>{
 });
 
 
-
 //搜索列表接口 by鑫  (调试完成)
 //获取特定城市下的房源信息的接口
 server.get('/search',(req,res)=>{
@@ -187,3 +186,11 @@ server.post("/saveorder",(req,res)=>{
   // 再次提交
 
 }) 
+//首页
+server.get('/index',(req,res)=>{
+  let sql="select rid,r_title,r_price ,r_photo,r_people from gz_home_resources"
+  pool.query(sql,(error,results)=>{
+    if(error)throw error;
+    res.send({message:"首页加载成功",results:results.slice(0,4)})
+  })
+})
