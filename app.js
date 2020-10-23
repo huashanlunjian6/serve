@@ -186,5 +186,28 @@ server.post("/saveorder",(req,res)=>{
   // console.log(Object.values(data).join())
   // 再次提交
   // 又一次提交
-
 }) 
+
+//利用房源id获取信息
+server.get("/getGzhome",(req,res)=>{
+  // 获取房源id
+  let id = req.query.id;
+  // 
+  let time = req.query.time
+  // console.log(id)
+  let sql = "SELECT r_title,r_price,r_room,r_hall,r_toilet,r_people FROM gz_home_resources WHERE rid= ?";
+  pool.query( sql,[id],(err,results)=>{
+    if(err) throw err;
+    // 获取当前的订单入离时间
+    let sql = "SELECT enter_time,leave_time FROM gz_order WHERE o_rid=? and enter_time> ?" 
+    pool.query(sql,[id,time],(err,result)=>{
+      if(err) throw err;
+      res.send({message:'数据获取ok',code:1,result,results})
+      // console.log( result )
+      // console.log("ss--", results )
+    })
+    // console.log(results)
+  } )
+  
+  // pool.query(sql)
+})
