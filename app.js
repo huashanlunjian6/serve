@@ -110,7 +110,6 @@ server.get('/city', (req, res) => {
 });
 
 
-
 //搜索列表接口 by鑫  (调试完成)
 //获取特定城市下的房源信息的接口
 server.get('/search', (req, res) => {
@@ -166,6 +165,7 @@ server.get('/details', (req, res) => {
 
 // 数据测试成功
 // 向数据库放入订单信息
+<<<<<<< HEAD
 server.post("/saveorder", (req, res) => {
         //获取地址栏中传开的数据
         let data = req.body;
@@ -244,3 +244,62 @@ server.post('/login', (req, res) => {
     })
     // 如果找到，则代表用户登陆成功，用户名密码都正确
     // 否则代表用户登陆失败
+=======
+server.post("/saveorder",(req,res)=>{
+  //获取地址栏中传开的数据
+  let data = req.body;
+  // // 要插入的数据，按顺序来
+  let dataInsert = Object.values( data ).join("','")
+  // console.log(req.body.r_uid )
+  // 向数据库中插入数据
+  let sql = "INSERT INTO gz_order(r_uid,o_rid,status,order_time,enter_time,leave_time,all_price,o_enter_person_name,o_enter_person_phone,o_enter_person_idcard) VALUES(' "+dataInsert+" ')" ;
+  pool.query(sql,(err,result)=>{
+    if( err ) throw err;
+    // console.log( result )
+    if(result.affectedRows){
+      res.send( {message:"添加成功",code:1} )
+    }else{
+      res.send( {message:'添加失败',code:0} )
+    }
+  } )
+  // console.log(Object.values(data).join())
+  // 再次提交
+  // 又一次提交
+}) 
+
+<<<<<<< HEAD
+}) 
+//首页
+server.get('/index',(req,res)=>{
+  let sql="select rid,r_title,r_price ,r_photo,r_people from gz_home_resources"
+  pool.query(sql,(error,results)=>{
+    if(error)throw error;
+    res.send({message:"首页加载成功",results:results.slice(0,4)})
+  })
+=======
+//利用房源id获取信息
+server.get("/getGzhome",(req,res)=>{
+  // 获取房源id
+  let id = req.query.id;
+  // 
+  let time = req.query.time
+  // console.log(id)
+  let sql = "SELECT r_title,r_price,r_room,r_hall,r_toilet,r_people FROM gz_home_resources WHERE rid= ?";
+  pool.query( sql,[id],(err,results)=>{
+    if(err) throw err;
+    // 获取当前的订单入离时间
+    let sql = "SELECT enter_time,leave_time FROM gz_order WHERE o_rid=? and enter_time> ?" 
+    pool.query(sql,[id,time],(err,result)=>{
+      if(err) throw err;
+      res.send({message:'数据获取ok',code:1,result,results})
+      // console.log( result )
+      // console.log("ss--", results )
+    })
+    // console.log(results)
+  } )
+  // 又一次提交
+  // 又一次提交
+  // pool.query(sql)
+>>>>>>> 362e24f3a927ef1cd83f0ade476c81be15692000
+})
+>>>>>>> 8ef7ea790308bcf70a73c2b58bb18a218885dc30
