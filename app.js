@@ -152,8 +152,8 @@ server.get('/details', (req, res) => {
     //获取房子的id
     let id = req.query.id;
     console.log(id)
-        //SQL查询 -- 
-        //
+    //SQL查询 -- 
+    //
     let sql = 'SELECT rid,r_title,r_address,r_describe,r_photo,r_price,r_margin,r_room,r_hall,r_toilet,r_bed,r_people,r_fac,r_know FROM gz_home_resources WHERE rid=?';
     //执行SQL语句
     pool.query(sql, [id], (error, results) => {
@@ -166,28 +166,28 @@ server.get('/details', (req, res) => {
 // 数据测试成功
 // 向数据库放入订单信息
 server.post("/saveorder", (req, res) => {
-        //获取地址栏中传开的数据
-        let data = req.body;
-        // // 要插入的数据，按顺序来
-        let dataInsert = Object.values(data).join("','")
-            // console.log(req.body.r_uid )
-            // 向数据库中插入数据
-        let sql = "INSERT INTO gz_order(r_uid,o_rid,status,order_time,enter_time,leave_time,all_price,o_enter_person_name,o_enter_person_phone,o_enter_person_idcard) VALUES(' " + dataInsert + " ')";
-        pool.query(sql, (err, result) => {
-                if (err) throw err;
-                // console.log( result )
-                if (result.affectedRows) {
-                    res.send({ message: "添加成功", code: 1 })
-                } else {
-                    res.send({ message: '添加失败', code: 0 })
-                }
-            })
-            // console.log(Object.values(data).join())
-            // 再次提交
-
+    //获取地址栏中传开的数据
+    let data = req.body;
+    // // 要插入的数据，按顺序来
+    let dataInsert = Object.values(data).join("','")
+    // console.log(req.body.r_uid )
+    // 向数据库中插入数据
+    let sql = "INSERT INTO gz_order(r_uid,o_rid,status,order_time,enter_time,leave_time,all_price,o_enter_person_name,o_enter_person_phone,o_enter_person_idcard) VALUES(' " + dataInsert + " ')";
+    pool.query(sql, (err, result) => {
+        if (err) throw err;
+        // console.log( result )
+        if (result.affectedRows) {
+            res.send({ message: "添加成功", code: 1 })
+        } else {
+            res.send({ message: '添加失败', code: 0 })
+        }
     })
-    // 接收注册的姓名和密码数据by王睿芳
-    //用户注册的接口
+    // console.log(Object.values(data).join())
+    // 再次提交
+
+})
+// 接收注册的姓名和密码数据by王睿芳
+//用户注册的接口
 server.post('/register', (req, res) => {
     //接收用户以POST方式提交的数据
     let uname = req.body.uname;
@@ -228,81 +228,83 @@ server.post('/register', (req, res) => {
 
 // 用户登陆的接口by 王睿芳
 server.post('/login', (req, res) => {
-  let uname = req.body.uname;
-  let upwd = md5(req.body.upwd);
-  // 现在要以输入的用户名和密码为条件进行查找
-  let sql = 'select uid,uname,user_name,avatar,isrole from gz_user where uname=? and upwd=?';
-  pool.query(sql, [uname, upwd], (err, results) => {
-      if (err) throw err;
-      //登陆成功
-      if (results.length == 1) {
-          res.send({ message: '登陆成功', code: 1, info: results[0] });
+    let uname = req.body.uname;
+    let upwd = md5(req.body.upwd);
+    // 现在要以输入的用户名和密码为条件进行查找
+    let sql = 'select uid,uname,user_name,avatar,isrole from gz_user where uname=? and upwd=?';
+    pool.query(sql, [uname, upwd], (err, results) => {
+        if (err) throw err;
+        //登陆成功
+        if (results.length == 1) {
+            res.send({ message: '登陆成功', code: 1, info: results[0] });
 
-      } else {
-          //登陆失败
-          res.send({ message: '登陆失败', code: 0 });
-      }
-  })
+        } else {
+            //登陆失败
+            res.send({ message: '登陆失败', code: 0 });
+        }
+    })
 })
 
 
-    // 如果找到，则代表用户登陆成功，用户名密码都正确
-    // 否则代表用户登陆失败
-server.post("/saveorder",(req,res)=>{
-  //获取地址栏中传开的数据
-  let data = req.body;
-  // // 要插入的数据，按顺序来
-  let dataInsert = Object.values( data ).join("','")
-  // console.log(req.body.r_uid )
-  // 向数据库中插入数据
-  let sql = "INSERT INTO gz_order(r_uid,o_rid,status,order_time,enter_time,leave_time,all_price,o_enter_person_name,o_enter_person_phone,o_enter_person_idcard) VALUES(' "+dataInsert+" ')" ;
-  pool.query(sql,(err,result)=>{
-    if( err ) throw err;
-    // console.log( result )
-    if(result.affectedRows){
-      res.send( {message:"添加成功",code:1} )
-    }else{
-      res.send( {message:'添加失败',code:0} )
-    }
-  } )
-  // console.log(Object.values(data).join())
-  // 再次提交
-  // 又一次提交
-}) 
+// 如果找到，则代表用户登陆成功，用户名密码都正确
+// 否则代表用户登陆失败
+server.post("/saveorder", (req, res) => {
+    //获取地址栏中传开的数据
+    let data = req.body;
+    // // 要插入的数据，按顺序来
+    let dataInsert = Object.values(data).join("','")
+    // console.log(req.body.r_uid )
+    // 向数据库中插入数据
+    let sql = "INSERT INTO gz_order(r_uid,o_rid,status,order_time,enter_time,leave_time,all_price,o_enter_person_name,o_enter_person_phone,o_enter_person_idcard) VALUES(' " + dataInsert + " ')";
+    pool.query(sql, (err, result) => {
+        if (err) throw err;
+        // console.log( result )
+        if (result.affectedRows) {
+            res.send({ message: "添加成功", code: 1 })
+        } else {
+            res.send({ message: '添加失败', code: 0 })
+        }
+    })
+    // console.log(Object.values(data).join())
+    // 再次提交
+    // 又一次提交
+})
 
 
 
 
 //首页
-server.get('/index',(req,res)=>{
-  let sql="select rid,r_title,r_price ,r_photo,r_people from gz_home_resources"
-  pool.query(sql,(error,results)=>{
-    if(error)throw error;
-    res.send({message:"首页加载成功",results:results.slice(0,4)})
-  })
-}) 
+server.get('/index', (req, res) => {
+    let sql = "select rid,r_title,r_price ,r_photo,r_people from gz_home_resources"
+    pool.query(sql, (error, results) => {
+        if (error) throw error;
+        // console.log(results.slice(0, 4))
+        res.send({ message: "首页加载成功", results: results.slice(0, 4) })
+    })
+})
 
 //利用房源id获取信息
-server.get("/getGzhome",(req,res)=>{
-  // 获取房源id
-  let id = req.query.id;
-  // 
-  let time = req.query.time
-  // console.log(id)
-  let sql = "SELECT r_title,r_price,r_room,r_hall,r_toilet,r_people FROM gz_home_resources WHERE rid= ?";
-  pool.query( sql,[id],(err,results)=>{
-    if(err) throw err;
-    // 获取当前的订单入离时间
-    let sql = "SELECT enter_time,leave_time FROM gz_order WHERE o_rid=? and enter_time> ?" 
-    pool.query(sql,[id,time],(err,result)=>{
-      if(err) throw err;
-      res.send({message:'数据获取ok',code:1,result,results})
-      // console.log( result )
-      // console.log("ss--", results )
+server.get("/getGzhome", (req, res) => {
+    // 获取房源id
+    let id = req.query.id;
+    // 
+    let time = req.query.time
+    // console.log(id)
+    let sql = "SELECT r_title,r_price,r_room,r_hall,r_toilet,r_people FROM gz_home_resources WHERE rid= ?";
+    pool.query(sql, [id], (err, results) => {
+        if (err) throw err;
+        // 获取当前的订单入离时间
+        let sql = "SELECT enter_time,leave_time FROM gz_order WHERE o_rid=? and enter_time> ?"
+        pool.query(sql, [id, time], (err, result) => {
+            if (err) throw err;
+            res.send({ message: '数据获取ok', code: 1, result, results })
+            // console.log(result)
+            // console.log("ss--", results)
+        })
+        // console.log(results)
+        // console.log(results)
     })
-    // console.log(results)
-  } )
-  // 又一次提交
-  // 又一次提交
-  // pool.query(sql)
+    // 又一次提交
+    // 又一次提交
+    // pool.query(sql)
 })
