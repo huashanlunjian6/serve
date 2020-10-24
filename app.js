@@ -307,4 +307,5 @@ server.get("/getGzhome", (req, res) => {
     // 又一次提交
     // 又一次提交
     // pool.query(sql)
+    // 24号有一次提交
 })
